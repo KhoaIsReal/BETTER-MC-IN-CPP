@@ -53,7 +53,8 @@ glad_add_library(
 )
 
 # Application
-add_executable(untitled main.cpp)
+add_executable(untitled main.cpp
+        window.h)
 
 target_link_libraries(untitled PRIVATE
         glad_gl_core_33
