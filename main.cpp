@@ -39,6 +39,9 @@ private:
 
 public:
     void init_func() override {
+        // Colored background
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
         // Create VAO, VBO
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
