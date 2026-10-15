@@ -10,6 +10,14 @@
 #include <iostream>
 #include <stdexcept>
 
+class Runner {
+public:
+    virtual void init_func() = 0;
+    virtual void run_func() = 0;
+
+    virtual ~Runner() = default;
+};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -50,6 +58,7 @@ public:
     Window(int width, int height, const char* title) {
         // Init work
         glfwInit();
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -82,18 +91,20 @@ public:
      * Repeatedly executes the supplied callback, swaps the front and back
      * buffers, and processes pending GLFW events until the window is closed.
      *
-     * @param run_func Optional pointer to a function executed once per frame.
-     *        If nullptr, the callback is skipped.
+     * @param r A reference to a Runner object
+     *      this function will call init_func() and run_func() in that object to finish the pipeline
      *
      * @note The callback takes no arguments and returns no value.
      * @note Calls glfwTerminate() when the loop ends.
      */
-    void run(void (*run_func)()) {
+    void run(Runner& r) {
+        r.init_func();
+
         while(!glfwWindowShouldClose(window))
         {
-            if (run_func != nullptr) {
-                run_func();
-            }
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            r.run_func();
 
             glfwSwapBuffers(window);
             glfwPollEvents();
